@@ -364,12 +364,14 @@ public class SingleConnectome : MonoBehaviour
                         GameObject edge = Instantiate(_edgePrefab, edgePosition, Quaternion.identity);
                         edge.GetComponent<Renderer>().material.SetColor("_Color1", Nodes[nodeNumber - 1].transform.GetComponent<Renderer>().material.GetColor("_Color"));
                         edge.GetComponent<Renderer>().material.SetColor("_Color2", Nodes[i].transform.GetComponent<Renderer>().material.GetColor("_Color"));
+                 
 
                         Vector3 tempPosition = edge.transform.position;
                         edge.transform.parent = this.transform;
                         edge.transform.localPosition = tempPosition;
                         edge.transform.up = offset;
                         edge.transform.localScale = scale;
+                        edge.layer = 2;
                         edgeTemp.Add(edge);
                         Edges.Add(edge);
 
