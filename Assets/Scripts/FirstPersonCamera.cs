@@ -24,6 +24,7 @@ public class FirstPersonCamera : MonoBehaviour
     private float sens = 10f;
     private float minFov = 15f;
     private float maxFov = 90f;
+    private float speed = 30f;
 
     private GameObject connectomeToMove;
     private Vector3 horizontal;
@@ -45,35 +46,8 @@ public class FirstPersonCamera : MonoBehaviour
     {
         updateCamera();
         updateView();
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-           if( connectomeToMove != null)
-            {
-                connectomeToMove.transform.Translate(horizontal.normalized/10);  
-            }
-        }
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            if (connectomeToMove != null)
-            {
-                connectomeToMove.transform.Translate(-1*horizontal.normalized / 10);
-            }
-        }
-
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            if (connectomeToMove != null)
-            {
-                connectomeToMove.transform.Translate(-1 * vertical.normalized / 10);
-            }
-        }
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            if (connectomeToMove != null)
-            {
-                connectomeToMove.transform.Translate( vertical.normalized / 10);
-            }
-        }
+        turnConnectome();
+        
 
 
 
@@ -199,4 +173,55 @@ public class FirstPersonCamera : MonoBehaviour
         }
     }
 
+
+    public void turnConnectome()
+    {
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            if (connectomeToMove != null)
+            {
+                connectomeToMove.transform.Translate(horizontal.normalized / 10);
+            }
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            if (connectomeToMove != null)
+            {
+                connectomeToMove.transform.Translate(-1 * horizontal.normalized / 10);
+            }
+        }
+
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            if (connectomeToMove != null)
+            {
+                connectomeToMove.transform.Translate(-1 * vertical.normalized / 10);
+            }
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            if (connectomeToMove != null)
+            {
+                connectomeToMove.transform.Translate(vertical.normalized / 10);
+            }
+        }
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            if (connectomeToMove != null)
+            {
+                connectomeToMove.transform.Rotate(Vector3.up * speed * Time.deltaTime);
+            }
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            if (connectomeToMove != null)
+            {
+                connectomeToMove.transform.Rotate(-Vector3.up * speed * Time.deltaTime);
+            }
+        }
+
+    }
 }
+
+
