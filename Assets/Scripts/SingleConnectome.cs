@@ -49,7 +49,7 @@ public class SingleConnectome : MonoBehaviour
     void Start()
     {
         _connectomeLabels = Resources.Load("Prefabs/ConnectomeLabel") as GameObject;
-        gameObject.layer = 2;
+     //   gameObject.layer = 2;
 
         _HUD = Resources.Load("Prefabs/HUD") as GameObject;
 

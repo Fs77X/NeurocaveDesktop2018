@@ -25,6 +25,10 @@ public class FirstPersonCamera : MonoBehaviour
     private float minFov = 15f;
     private float maxFov = 90f;
 
+    private GameObject connectomeToMove;
+    private Vector3 horizontal;
+    private Vector3 vertical;
+
     void start()
     {
         Main_Camera = GameObject.Find("Main_Camera");
@@ -41,11 +45,47 @@ public class FirstPersonCamera : MonoBehaviour
     {
         updateCamera();
         updateView();
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+           if( connectomeToMove != null)
+            {
+                connectomeToMove.transform.Translate(horizontal.normalized/10);  
+            }
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            if (connectomeToMove != null)
+            {
+                connectomeToMove.transform.Translate(-1*horizontal.normalized / 10);
+            }
+        }
+
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            if (connectomeToMove != null)
+            {
+                connectomeToMove.transform.Translate(-1 * vertical.normalized / 10);
+            }
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            if (connectomeToMove != null)
+            {
+                connectomeToMove.transform.Translate( vertical.normalized / 10);
+            }
+        }
+
+
+
+
     }
 
     public void updateCamera()
+
     {
-        if (Input.GetKey(KeyCode.LeftShift))
+
+       
+        if (Input.GetKey(KeyCode.LeftShift))    
         {
             lastMouse = Input.mousePosition - lastMouse;
             lastMouse = new Vector3(-lastMouse.y * camSens, lastMouse.x * camSens, 0);
@@ -55,6 +95,8 @@ public class FirstPersonCamera : MonoBehaviour
 
 
         }
+
+
 
         fov += Input.GetAxis("Mouse ScrollWheel") * sens;
         fov = Mathf.Clamp(fov, minFov, maxFov);
@@ -69,12 +111,23 @@ public class FirstPersonCamera : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log(Input.GetMouseButtonDown(0));
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            
 
             if (Physics.Raycast(ray, out hit))
             {
-                Debug.Log(hit.transform.gameObject.name);
+
+                if (hit.collider.gameObject.tag == "SingleConnectome")
+                {
+                    GameObject connectome = hit.collider.gameObject;
+                   Vector3 side = Vector3.Cross(Camera.main.transform.up, Camera.main.transform.position - connectome.transform.position);
+                    Vector3 up = Vector3.Cross(side, Camera.main.transform.position - connectome.transform.position);
+                    connectomeToMove = connectome.transform.parent.gameObject;
+                    horizontal = side;
+                    vertical = up;
+                    
+
+                }
                 if (hit.transform.parent.gameObject.tag == "SingleConnectome")
                 {
                     int id = int.Parse(hit.transform.name);
@@ -122,6 +175,24 @@ public class FirstPersonCamera : MonoBehaviour
                     GameObject parent1 = hit.collider.transform.parent.parent.gameObject;
                     SingleConnectome name = parent1.GetComponentInChildren<SingleConnectome>();
                     name.classificationType = SingleConnectome.classificationTypes.RichClub;
+                }
+
+                if (hit.collider.gameObject.name == "EdgeModeOnParent")
+                {
+                    Debug.Log("on");
+                    GameObject parent1 = hit.collider.transform.parent.parent.gameObject;
+                    GameObject connectome = parent1.GetComponentInChildren<SingleConnectome>().gameObject;
+                    connectome.layer = 0;
+
+                    connectome.GetComponent<BoxCollider>().enabled = true;
+                }
+                if (hit.collider.gameObject.name == "EdgeModeOffParent")
+                {
+                    Debug.Log("off");
+                    GameObject parent1 = hit.collider.transform.parent.parent.gameObject;
+
+                    GameObject connectome = parent1.GetComponentInChildren<SingleConnectome>().gameObject;
+                    connectome.layer = 2;
                 }
             }
 
